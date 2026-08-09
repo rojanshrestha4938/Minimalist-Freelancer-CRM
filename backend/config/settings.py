@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # third party
+    "django_filters",
+    
     # REST Framework
     'rest_framework',
     'rest_framework_simplejwt',
@@ -154,4 +157,4 @@ REST_FRAMEWORK = {
 # Simple JWT Settings
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-}
+}
