@@ -53,4 +53,9 @@ urlpatterns = [
         "api/",
         include("apps.projects.urls"),
     ),
+
+    path(
+        "api/",
+        include("apps.tasks.urls"),
+    ),
 ]
