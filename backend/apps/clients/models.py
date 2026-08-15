@@ -25,7 +25,8 @@ class Client(models.Model):
         blank=True
     )
 
-    avatar = models.URLField(
+    avatar = models.ImageField(
+        upload_to="clients/",
         blank=True,
         null=True
     )

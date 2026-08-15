@@ -2,6 +2,7 @@ from django.db.models import Q
 
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .models import Client
 from .serializers import ClientSerializer
@@ -12,6 +13,8 @@ class ClientViewSet(viewsets.ModelViewSet):
     serializer_class = ClientSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = ClientPagination
+
+    parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
         queryset = Client.objects.filter(
