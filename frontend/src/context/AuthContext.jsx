@@ -14,8 +14,8 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(null)
 
-  const login = async (username, password) => {
-    const data = await loginUser(username, password)
+  const login = async (email, password) => {
+    const data = await loginUser(email, password)
 
     localStorage.setItem("accessToken", data.access)
     localStorage.setItem("refreshToken", data.refresh)

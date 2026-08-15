@@ -2,9 +2,6 @@ import axios from "axios"
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 })
 
 // Add access token to every request
@@ -14,6 +11,13 @@ api.interceptors.request.use(
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
+    }
+
+    // If the request contains FormData (for image uploads),
+    // let the browser set Content-Type automatically.
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"]
+      delete config.headers["content-type"]
     }
 
     return config
@@ -30,6 +34,7 @@ api.interceptors.response.use(
 
     if (
       error.response?.status === 401 &&
+      originalRequest &&
       !originalRequest._retry &&
       localStorage.getItem("refreshToken")
     ) {

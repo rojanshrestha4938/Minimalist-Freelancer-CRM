@@ -67,8 +67,7 @@ export default function Login() {
     setIsLoading(true)
 
     try {
-      // The backend expects "username",
-      // but our username is the user's email.
+      // Login using email and password
       await login(email, password)
 
       setAuthSuccess("Welcome back! Redirecting to dashboard...")
