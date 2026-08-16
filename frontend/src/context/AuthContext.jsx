@@ -5,11 +5,11 @@ export const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState(
-    localStorage.getItem("accessToken")
+    sessionStorage.getItem("accessToken")
   )
 
   const [refreshToken, setRefreshToken] = useState(
-    localStorage.getItem("refreshToken")
+    sessionStorage.getItem("refreshToken")
   )
 
   const [user, setUser] = useState(null)
@@ -17,8 +17,12 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const data = await loginUser(email, password)
 
-    localStorage.setItem("accessToken", data.access)
-    localStorage.setItem("refreshToken", data.refresh)
+    sessionStorage.setItem("accessToken", data.access)
+    sessionStorage.setItem("refreshToken", data.refresh)
+
+    // Clear legacy localStorage if any exists
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("refreshToken")
 
     setAccessToken(data.access)
     setRefreshToken(data.refresh)
@@ -27,6 +31,8 @@ export function AuthProvider({ children }) {
   }
 
   const logout = () => {
+    sessionStorage.removeItem("accessToken")
+    sessionStorage.removeItem("refreshToken")
     localStorage.removeItem("accessToken")
     localStorage.removeItem("refreshToken")
 
@@ -36,7 +42,7 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken")
+    const token = sessionStorage.getItem("accessToken")
 
     if (token) {
       setAccessToken(token)

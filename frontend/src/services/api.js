@@ -7,7 +7,7 @@ const api = axios.create({
 // Add access token to every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken")
+    const token = sessionStorage.getItem("accessToken")
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -36,12 +36,12 @@ api.interceptors.response.use(
       error.response?.status === 401 &&
       originalRequest &&
       !originalRequest._retry &&
-      localStorage.getItem("refreshToken")
+      sessionStorage.getItem("refreshToken")
     ) {
       originalRequest._retry = true
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken")
+        const refreshToken = sessionStorage.getItem("refreshToken")
 
         const response = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/auth/token/refresh/`,
@@ -52,13 +52,15 @@ api.interceptors.response.use(
 
         const newAccessToken = response.data.access
 
-        localStorage.setItem("accessToken", newAccessToken)
+        sessionStorage.setItem("accessToken", newAccessToken)
 
         originalRequest.headers.Authorization =
           `Bearer ${newAccessToken}`
 
         return api(originalRequest)
       } catch (refreshError) {
+        sessionStorage.removeItem("accessToken")
+        sessionStorage.removeItem("refreshToken")
         localStorage.removeItem("accessToken")
         localStorage.removeItem("refreshToken")
 
