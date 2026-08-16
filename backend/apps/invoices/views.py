@@ -1,4 +1,3 @@
-from django.db.models import Q
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -37,19 +36,16 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
         today = timezone.localdate()
 
+        # "overdue" is never stored in DB; it is only a computed effective_status.
+        # Overdue = sent invoices whose due_date has already passed.
         overdue_invoices = queryset.filter(
-            Q(status=Invoice.Status.OVERDUE)
-            | Q(
-                status=Invoice.Status.SENT,
-                due_date__lt=today,
-            )
+            status=Invoice.Status.SENT,
+            due_date__lt=today,
         )
 
+        # Outstanding = all sent invoices (includes both on-time and overdue ones).
         outstanding_invoices = queryset.filter(
-            Q(status=Invoice.Status.SENT)
-            | Q(
-                status=Invoice.Status.OVERDUE
-            )
+            status=Invoice.Status.SENT,
         )
 
         paid_this_month_invoices = queryset.filter(

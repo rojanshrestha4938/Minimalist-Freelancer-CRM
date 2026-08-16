@@ -31,7 +31,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Task.objects.filter(
             owner=self.request.user
-        )
+        ).order_by("-created_at")
 
     def perform_create(self, serializer):
         serializer.save(

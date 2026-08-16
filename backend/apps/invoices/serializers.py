@@ -53,7 +53,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "id",
             "invoice_number",
-            "status",
             "effective_status",
             "subtotal",
             "tax_amount",
