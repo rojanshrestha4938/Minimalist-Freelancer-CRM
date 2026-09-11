@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
-import { loginUser } from "../services/authService"
+import { loginUser, getCurrentUser } from "../services/authService"
 
 export const AuthContext = createContext(null)
 
@@ -14,6 +14,15 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(null)
 
+  const fetchUserProfile = async () => {
+    try {
+      const userData = await getCurrentUser()
+      setUser(userData)
+    } catch {
+      setUser(null)
+    }
+  }
+
   const login = async (email, password) => {
     const data = await loginUser(email, password)
 
@@ -26,6 +35,13 @@ export function AuthProvider({ children }) {
 
     setAccessToken(data.access)
     setRefreshToken(data.refresh)
+
+    try {
+      const userData = await getCurrentUser()
+      setUser(userData)
+    } catch {
+      // ignore
+    }
 
     return data
   }
@@ -46,6 +62,7 @@ export function AuthProvider({ children }) {
 
     if (token) {
       setAccessToken(token)
+      fetchUserProfile()
     }
   }, [])
 

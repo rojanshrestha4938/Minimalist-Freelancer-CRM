@@ -1,6 +1,15 @@
-import { Bell, Search } from "lucide-react"
+import { Bell, Search, User as UserIcon } from "lucide-react"
+import { useAuth } from "../hooks/useAuth"
 
 export default function Header() {
+  const { user } = useAuth()
+
+  const displayName = user?.first_name
+    ? `${user.first_name} ${user.last_name || ""}`.trim()
+    : user?.username || "User"
+
+  const userInitial = (displayName.charAt(0) || "U").toUpperCase()
+
   return (
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
       {/* Workspace Search Bar */}
@@ -25,17 +34,16 @@ export default function Header() {
         </button>
 
         {/* User profile avatar */}
-        <button
-          type="button"
-          className="relative rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer"
-          aria-label="User profile"
-        >
-          <img
-            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80"
-            alt="User avatar"
-            className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-xs"
-          />
-        </button>
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            className="relative flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-semibold text-sm shadow-xs border border-blue-200/50 hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer transition-all"
+            title={displayName}
+            aria-label={`User profile for ${displayName}`}
+          >
+            {userInitial}
+          </button>
+        </div>
       </div>
     </header>
   )
