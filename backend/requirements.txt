@@ -8,3 +8,4 @@ psycopg[binary]==3.3.5
 reportlab==5.0.0
 Pillow==12.3.0
 gunicorn==26.2.0
+dj-database-url==2.3.0
